@@ -53,6 +53,9 @@
           })
           .then(function (data) {
             assignImgSrc(data.data.images.original.url);
+          })
+          .catch(function(err) {
+            console.log("Error!", err);
           });
       };
 
