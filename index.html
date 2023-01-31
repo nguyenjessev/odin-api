@@ -5,27 +5,54 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
+
+    <style>
+      body {
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+        margin: 0 auto;
+        max-width: 600px;
+        padding-top: 5rem;
+      }
+
+      .new-img-form {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+      }
+    </style>
   </head>
   <body>
-    
-    <div>
+    <div class="new-img-form">
+      <label for="search-term">Search</label>
+      <input type="text" name="search-term" id="search-term" />
       <button type="button" class="new-img-button">Get New Image</button>
     </div>
     <img src="#" />
     <script>
+      const searchTermInput = document.querySelector('#search-term');
       const img = document.querySelector('img');
       const newImgButton = document.querySelector('.new-img-button');
 
+      const getSearchTerm = () => {
+        return searchTermInput.value || 'cats';
+      };
+
+      const assignImgSrc = (url) => {
+        img.src = url;
+      }
+
       const fetchNewImg = () => {
         fetch(
-          'https:/api.giphy.com/v1/gifs/translate?api_key=s7rXrptZ01viZEYWKF7I1Caev9Q7vBwN&s=cats',
+          `https:/api.giphy.com/v1/gifs/translate?api_key=s7rXrptZ01viZEYWKF7I1Caev9Q7vBwN&s=${getSearchTerm()}`,
           { mode: 'cors' }
         )
           .then(function (response) {
             return response.json();
           })
           .then(function (data) {
-            img.src = data.data.images.original.url;
+            assignImgSrc(data.data.images.original.url);
           });
       };
 
