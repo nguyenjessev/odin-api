@@ -41,27 +41,34 @@
 
       const assignImgSrc = (url) => {
         img.src = url;
-      }
-
-      const fetchNewImg = () => {
-        fetch(
-          `https:/api.giphy.com/v1/gifs/translate?api_key=s7rXrptZ01viZEYWKF7I1Caev9Q7vBwN&s=${getSearchTerm()}`,
-          { mode: 'cors' }
-        )
-          .then(function (response) {
-            return response.json();
-          })
-          .then(function (data) {
-            assignImgSrc(data.data.images.original.url);
-          })
-          .catch(function(err) {
-            console.log("Error!", err);
-          });
       };
 
-      newImgButton.addEventListener('click', fetchNewImg);
+      const fetchNewImg = async (searchTerm) => {
+        try {
+          const response = await fetch(
+            `https:/api.giphy.com/v1/gifs/translate?api_key=s7rXrptZ01viZEYWKF7I1Caev9Q7vBwN&s=${searchTerm}`,
+            { mode: 'cors' }
+          );
+          const data = await response.json();
 
-      fetchNewImg();
+          return data.data.images.original.url;
+        } catch (error) {
+          console.log('Error finding image!');
+
+          return fetchNewImg('error');
+        }
+      };
+
+      newImgButton.addEventListener('click', () => {
+        const searchTerm = getSearchTerm();
+        fetchNewImg(searchTerm).then((newImage) => {
+          assignImgSrc(newImage);
+        });
+      });
+
+      fetchNewImg(getSearchTerm()).then((url) => {
+        assignImgSrc(url);
+      });
     </script>
   </body>
 </html>
